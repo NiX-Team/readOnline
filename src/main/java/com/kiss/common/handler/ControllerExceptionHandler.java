@@ -15,4 +15,10 @@ public class ControllerExceptionHandler {
     public ReturnObject controllerHandle(WebException e) {
         return ReturnUtil.fail(e.getCode(),e.getMessage(),null);
     }
+
+    @ResponseBody
+    @ExceptionHandler(value = Exception.class)
+    public ReturnObject exceptionHandle(Exception e) {
+        return ReturnUtil.fail(-1,"未知错误",null);
+    }
 }

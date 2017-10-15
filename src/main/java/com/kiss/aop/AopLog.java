@@ -12,6 +12,7 @@ class AopLog {
     private ControllerLog log;
     @Pointcut("execution(* com.kiss.controller..*(..))")
     public void controllerMethod() {}
+
     @Before("controllerMethod()")
     public void before(JoinPoint joinPoint) {
         log.before(joinPoint);
