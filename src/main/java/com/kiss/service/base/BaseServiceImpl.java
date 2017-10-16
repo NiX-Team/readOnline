@@ -20,4 +20,19 @@ public abstract class BaseServiceImpl implements BaseService{
     public List findAll() {
         return jpaRepository.findAll();
     }
+
+    @Override
+    public Object findById(Integer id) {
+        return jpaRepository.findOne(id);
+    }
+
+    @Override
+    public void delete(Object o) {
+        jpaRepository.delete(o);
+    }
+
+    @Override
+    public void update(Object o) {
+        jpaRepository.saveAndFlush(o);
+    }
 }

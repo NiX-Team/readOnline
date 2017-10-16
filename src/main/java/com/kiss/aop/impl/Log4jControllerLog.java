@@ -20,7 +20,7 @@ public class Log4jControllerLog implements ControllerLog{
         log.info("===============start method===================");
         log.info(joinPoint.getSignature().getDeclaringTypeName());
         log.info(joinPoint.getSignature().getName());
-        log.info(JSONObject.toJSONString(Arrays.asList(joinPoint.getArgs())));
+        log.info(joinPoint.getArgs());
         log.info("==============================================");
     }
 
