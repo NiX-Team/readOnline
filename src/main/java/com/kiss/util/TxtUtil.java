@@ -28,6 +28,10 @@ public final class TxtUtil {
         return "";
     }
 
+    /**
+     * 输出txt文件startOffset到endOffset偏移之间的内容
+     * @param encode txt文件编码
+     * */
     public static String readStartToEndByNio(File txtFile,int startOffset,int endOffset,String encode) {
         try {
             int size = endOffset - startOffset;
