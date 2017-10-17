@@ -33,12 +33,14 @@ public class TxtChapterServiceImpl  extends BaseServiceImpl implements TxtChaper
             TxtChapterDto model1 = new TxtChapterDto();
             if ("asc".equals(sort.toLowerCase())) {
                 model1.setChapter(model.getChapters()[(page - 1) * limit + i]);
-                model1.setOffset(model.getOffsets()[(page - 1) * limit + i]);
+                model1.setOffset(model.getNioOffsets() != null ? null : model.getOffsets()[(page - 1) * limit + i]);
                 model1.setTitle(model.getTitles()[(page - 1) * limit + i]);
+                model1.setNioOffset(model.getNioOffsets() == null ? null : model.getNioOffsets()[(page - 1) * limit + i]);
             }else {
                 model1.setChapter(model.getChapters()[model.getChapters().length - 1 - ((page - 1) * limit + i)]);
-                model1.setOffset(model.getOffsets()[model.getChapters().length - 1 - ((page - 1) * limit + i)]);
+                model1.setOffset(model.getOffsets() == null ? null : model.getOffsets()[model.getChapters().length - 1 - ((page - 1) * limit + i)]);
                 model1.setTitle(model.getTitles()[model.getChapters().length - 1 - ((page - 1) * limit + i)]);
+                model1.setNioOffset(model.getNioOffsets() == null ? null : model.getNioOffsets()[model.getChapters().length - 1 - ((page - 1) * limit + i)]);
             }
             list.add(model1);
         }

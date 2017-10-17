@@ -2,6 +2,7 @@ package com.kiss.model;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,6 +32,12 @@ public class TxtChapterMsgModel {
     @Type(type="text")
     private String title;
 
+    //nio流操作时章节头的byte偏移量
+    @Basic(fetch = FetchType.LAZY)
+    @Type(type="text")
+    private String nioOffset;
+
+
     private String txtSn;
 
 
@@ -40,32 +47,42 @@ public class TxtChapterMsgModel {
     private Long[] offsets;
     @Transient
     private String[] titles;
+    @Transient
+    private Long[] nioOffsets;
 
-    public void addChapter(Integer chapter,Long offset,String title) {
+    public void addChapter(Integer chapter,Long offset,Long nioOffset,String title) {
+        Assert.notNull(chapter);
+        Assert.notNull(title);
         if (this.chapter == null) {
             this.chapter = String.valueOf(chapter);
-            this.offset = String.valueOf(offset);
+            this.offset = offset == null ? String.valueOf(offset) : null;
+            this.nioOffset = nioOffset == null ? String.valueOf(nioOffset) : null;
             this.title = title;
         }else {
             this.chapter += "," + chapter ;
-            this.offset += "," +  offset ;
+            this.offset += offset == null ? "" : ("," +  offset);
+            this.nioOffset += nioOffset == null ? "" : ("," +  nioOffset);
             this.title += "," +  title ;
         }
     }
 
-    public void addChapter(List chapter,List offset,List title) {
+    public void addChapter(List chapter, List offset, List title,List nioOffset) {
+        Assert.notNull(chapter);
+        Assert.notNull(title);
         StringBuffer sb = new StringBuffer();
         for (Object cha:chapter) {
             sb.append(cha + ",");
         }
         sb.deleteCharAt(sb.length() - 1);
         String str1 = sb.toString();
-
         sb.delete(0,sb.length());
-        for (Object off:offset) {
-            sb.append(off + ",");
+        if (offset != null) {
+            for (Object off:offset) {
+                sb.append(off + ",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
         }
-        sb.deleteCharAt(sb.length() - 1);
+
         String str2 = sb.toString();
 
         sb.delete(0,sb.length());
@@ -74,16 +91,50 @@ public class TxtChapterMsgModel {
         }
         sb.deleteCharAt(sb.length() - 1);
         String str3 = sb.toString();
+        sb.delete(0,sb.length());
+        if (nioOffset != null) {
+            for (Object nio:nioOffset) {
+                sb.append(nio + ",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
+        String str4 = sb.toString();
 
         if (this.chapter == null) {
             this.chapter = str1;
             this.offset = str2;
             this.title = str3;
+            this.nioOffset = str4;
         }else {
             this.chapter +=  str1;
             this.offset +=  str2;
             this.title += str3;
+            this.nioOffset += str4;
         }
+    }
+
+
+    public String getNioOffset() {
+        return nioOffset;
+    }
+
+    public void setNioOffset(String nioOffset) {
+        this.nioOffset = nioOffset;
+    }
+
+    public Long[] getNioOffsets() {
+        if (getNioOffset() == null) return null;
+        String[] chapters = getNioOffset().split(",");
+        Long[] longs = new Long[chapters.length];
+        for (int i = 0;i < chapters.length;i ++) {
+            longs[i] = new Long(chapters[i]);
+        }
+        return longs;
+    }
+
+    public void setNioOffsets(Long[] nioOffsets) {
+        this.nioOffsets = nioOffsets;
     }
 
     public Integer getId() {
@@ -137,6 +188,7 @@ public class TxtChapterMsgModel {
     }
 
     public Long[] getOffsets() {
+        if (getOffset() == null) return null;
         String[] chapters = getOffset().split(",");
         Long[] longs = new Long[chapters.length];
         for (int i = 0;i < chapters.length;i ++) {
@@ -160,6 +212,7 @@ public class TxtChapterMsgModel {
     public void setTxtSn(String txtSn) {
         this.txtSn = txtSn;
     }
+
 
     @Override
     public String toString() {

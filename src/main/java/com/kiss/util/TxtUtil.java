@@ -1,6 +1,7 @@
 package com.kiss.util;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 public final class TxtUtil {
@@ -27,18 +28,15 @@ public final class TxtUtil {
         return "";
     }
 
-    public static String readStartToEndByNio(File txtFile,Long startLine,Long endLine) {
+    public static String readStartToEndByNio(File txtFile,int startOffset,int endOffset,String encode) {
         try {
             FileChannel fileChannel = new RandomAccessFile(txtFile,"r").getChannel();
-
-        } catch (FileNotFoundException e) {
+            ByteBuffer buffer = ByteBuffer.allocate((int) fileChannel.size());
+            fileChannel.read(buffer);
+            return new String(buffer.array(),startOffset,endOffset-startOffset,encode);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
-    }
-
-    private static String nioReadLine(FileChannel fileChannel) {
-
         return "";
     }
 }

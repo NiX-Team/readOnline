@@ -3,9 +3,18 @@ package com.kiss.dto;
 public class TxtChapterDto {
     private Integer chapter;
     private Long offset;
+    private Long nioOffset;
     private String title;
 
     public TxtChapterDto() {}
+
+    public Long getNioOffset() {
+        return nioOffset;
+    }
+
+    public void setNioOffset(Long nioOffset) {
+        this.nioOffset = nioOffset;
+    }
 
     public Integer getChapter() {
         return chapter;
