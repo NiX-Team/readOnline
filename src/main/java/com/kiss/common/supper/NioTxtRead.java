@@ -2,8 +2,8 @@ package com.kiss.common.supper;
 
 import com.kiss.common.TxtRead;
 import com.kiss.model.TxtChapterMsgModel;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -14,11 +14,15 @@ import java.util.List;
 
 @Component
 public class NioTxtRead implements TxtRead{
+
+    /**
+     * @param encode 为空时默认UTF-8
+     * */
     @Override
     public TxtChapterMsgModel txtChapterMsgLists(File file, String txtSn, String encode) {
-
-        System.out.println("nio------------");
-
+        Assert.notNull(file);
+        Assert.notNull(txtSn);
+        encode = encode == null ? "UTF-8" : encode;
         try {
             FileChannel fileChannel = new RandomAccessFile(file,"r").getChannel();
             ByteBuffer buffer = ByteBuffer.allocate((int) fileChannel.size());

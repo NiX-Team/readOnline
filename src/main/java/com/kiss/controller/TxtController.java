@@ -3,17 +3,16 @@ package com.kiss.controller;
 import com.kiss.common.ReturnObject;
 import com.kiss.dto.TxtChapterDto;
 import com.kiss.model.TxtModel;
-import com.kiss.service.TxtChaperService;
+import com.kiss.service.TxtChapterService;
 import com.kiss.service.TxtService;
 import com.kiss.util.ReturnUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +20,9 @@ import java.util.Map;
 public class TxtController {
     @Autowired
     private TxtService txtService;
+    @Qualifier("txtChapterServiceImpl")
     @Autowired
-    private TxtChaperService chaperService;
+    private TxtChapterService chapterService;
 
 
     /**
@@ -60,20 +60,23 @@ public class TxtController {
     public ReturnObject chapterList(@PathVariable("txtSn") String txtSn,@RequestParam(value = "page",defaultValue = "1") Integer page,
                                     @RequestParam(value = "limit",defaultValue = "100") Integer limit,
                                     @RequestParam(value = "sort",defaultValue = "asc") String sort) {
-        return ReturnUtil.success(chaperService.chapterList(txtSn,page,limit,sort));
+        return ReturnUtil.success(chapterService.chapterList(txtSn,page,limit,sort));
     }
 
     /**
      * 提交章节信息  返回章节内
      ** @param txtSn txt图书编号
      * @param limit 阅读每页显示字数
-     * @return 返回格式{"code":1,"haveNext(是否有下页)":true,"date":txt内容}
+     * @return 返回格式{"code":1,"msg":"SUCCESS","date":{"nextChapter":下一章节信息,"txt":阅读内容}}
      * */
     @GetMapping("/read/{txtSn}/{page}")
     public ReturnObject readChapter(
             @PathVariable("txtSn") String txtSn,@PathVariable("page") Integer page, @ModelAttribute TxtChapterDto dto,
             @RequestParam(value = "limit",defaultValue = "1204") Integer limit
             ) {
-        return ReturnUtil.success(txtService.readChapter(txtSn,dto,page,limit));
+        Map<String,Object> map = new HashMap<>();
+        map.put("txt",txtService.readChapter(txtSn,dto,page,limit));
+        map.put("nextChapter",chapterService.nextChapter(txtService.findBySn(txtSn),dto.getChapter()));
+        return ReturnUtil.success(map);
     }
 }

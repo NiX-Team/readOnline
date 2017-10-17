@@ -23,8 +23,15 @@ public interface TxtService extends BaseService {
 
     /**
      * 阅读
+     * @param txtSn txt图书编号
+     * @param txtChapterDto 读取章节信息
+     * @param page 当前章节阅读页数
+     * @param limit 当前页显示限制字数
+     * @return 返回当前页面txt内容
      * */
     String readChapter(String txtSn, TxtChapterDto txtChapterDto,Integer page,Integer limit);
+
+
 
     /**
      * 通过txt编号查找txt信息

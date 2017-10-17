@@ -124,7 +124,7 @@ public class TxtChapterMsgModel {
     }
 
     public Long[] getNioOffsets() {
-        if (getNioOffset() == null) return null;
+        if (getNioOffset() == null || getNioOffset().isEmpty()) return null;
         String[] chapters = getNioOffset().split(",");
         Long[] longs = new Long[chapters.length];
         for (int i = 0;i < chapters.length;i ++) {
@@ -188,7 +188,7 @@ public class TxtChapterMsgModel {
     }
 
     public Long[] getOffsets() {
-        if (getOffset() == null) return null;
+        if (getOffset() == null || getOffset().isEmpty()) return null;
         String[] chapters = getOffset().split(",");
         Long[] longs = new Long[chapters.length];
         for (int i = 0;i < chapters.length;i ++) {

@@ -73,8 +73,6 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
             Long endSLine = model.getChapters().getOffsets()[txtChapterDto.getChapter() + 1];
             date = TxtUtil.readStartToEndByStream(txtFile,startLine,endSLine);
         }
-
-
         return date.substring((page-1)*limit,page*limit > date.length() ? date.length() : page*limit);
     }
 

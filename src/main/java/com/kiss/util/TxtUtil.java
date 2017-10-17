@@ -30,10 +30,11 @@ public final class TxtUtil {
 
     public static String readStartToEndByNio(File txtFile,int startOffset,int endOffset,String encode) {
         try {
+            int size = endOffset - startOffset;
             FileChannel fileChannel = new RandomAccessFile(txtFile,"r").getChannel();
-            ByteBuffer buffer = ByteBuffer.allocate((int) fileChannel.size());
-            fileChannel.read(buffer);
-            return new String(buffer.array(),startOffset,endOffset-startOffset,encode);
+            ByteBuffer buffer = ByteBuffer.allocate(size);
+            fileChannel.read(buffer,startOffset);
+            return new String(buffer.array(),encode);
         } catch (Exception e) {
             e.printStackTrace();
         }

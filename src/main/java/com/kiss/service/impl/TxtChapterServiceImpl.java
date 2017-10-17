@@ -3,7 +3,8 @@ package com.kiss.service.impl;
 import com.kiss.dto.TxtChapterDto;
 import com.kiss.jpa.TxtChapterJpa;
 import com.kiss.model.TxtChapterMsgModel;
-import com.kiss.service.TxtChaperService;
+import com.kiss.model.TxtModel;
+import com.kiss.service.TxtChapterService;
 import com.kiss.service.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class TxtChapterServiceImpl  extends BaseServiceImpl implements TxtChaperService {
+public class TxtChapterServiceImpl  extends BaseServiceImpl implements TxtChapterService {
 
     @Autowired
     private TxtChapterJpa chapterJpa;
@@ -47,5 +48,15 @@ public class TxtChapterServiceImpl  extends BaseServiceImpl implements TxtChaper
         return list;
     }
 
-
+    @Override
+    public TxtChapterDto nextChapter(TxtModel txtModel, Integer nowChapter) {
+        if (nowChapter == txtModel.getChapters().getChapters().length - 1) return null;
+        TxtChapterDto dto = new TxtChapterDto();
+        TxtChapterMsgModel model = txtModel.getChapters();
+        dto.setChapter(model.getChapters()[nowChapter + 1]);
+        dto.setOffset(model.getOffsets() == null ? null : model.getOffsets()[nowChapter + 1]);
+        dto.setNioOffset(model.getNioOffsets() == null ? null : model.getNioOffsets()[nowChapter + 1]);
+        dto.setTitle(model.getTitles()[nowChapter + 1]);
+        return dto;
+    }
 }

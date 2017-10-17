@@ -3,6 +3,7 @@ package com.kiss.common.supper;
 import com.kiss.common.TxtRead;
 import com.kiss.model.TxtChapterMsgModel;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,15 +11,13 @@ import java.util.List;
 @Component
 public class StreamTxtRead implements TxtRead{
     /**
-     * 找出txt的章节信息
-     * @param file txt文件
-     * @param txtSn txt图书编号
+     *
+     * @return 读取失败返回null
      * */
     @Override
     public TxtChapterMsgModel txtChapterMsgLists(File file, String txtSn, String encode) {
-
-        System.out.println("stream------------");
-
+        Assert.notNull(file);
+        Assert.notNull(txtSn);
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),encode));
             String line;
