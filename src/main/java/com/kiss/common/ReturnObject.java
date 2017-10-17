@@ -2,13 +2,20 @@ package com.kiss.common;
 
 /**
  * 接口同意返回对象
- * */
+ *
+ * @author 11723*/
 public class ReturnObject<T extends Object> {
-    //状态码
+    /**
+     * 状态码
+     * */
     private Integer status;
-    //消息
+    /**
+     * 消息
+     */
     private String msg;
-    //返回内容
+    /**
+     * 返回内容
+     */
     private T data;
 
     public Integer getStatus() {

@@ -41,12 +41,17 @@ public class RedisCache implements Cache<CacheKey>{
     }
 
     @Override
-    public boolean put(CacheKey cacheKey) throws Exception{
+    public boolean put(CacheKey cacheKey) {
         return false;
     }
 
     @Override
     public CacheKey get(String cacheKey) {
         return null;
+    }
+
+    @Override
+    public int getPosition() {
+        return 0;
     }
 }

@@ -1,4 +1,4 @@
-package com.kiss.Exception;
+package com.kiss.cache.exception;
 
 public class CacheException extends Exception{
     private String msg;

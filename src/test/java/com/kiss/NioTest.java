@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Random;
 
 public class NioTest {
 
@@ -40,5 +41,10 @@ public class NioTest {
         }
         System.out.println("hh".getBytes() instanceof Serializable);
 
+    }
+
+    @Test
+    public void test() {
+        assert false : "sss";
     }
 }

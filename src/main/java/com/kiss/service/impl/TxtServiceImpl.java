@@ -37,14 +37,15 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
     }
 
     @Override
-    @Transactional
     public void save(TxtModel o, MultipartFile txtFile,MultipartFile coverImg) throws Exception{
-        if (!txtFile.getOriginalFilename().matches(".*[.]txt"))
-            throw new WebException(1,"只支持txt文件");
+        if (!txtFile.getOriginalFilename().matches(".*[.]txt")) {
+            throw new WebException(1, "只支持txt文件");
+        }
         //上传了封面文件
         if (coverImg != null) {
-            if (!coverImg.getOriginalFilename().matches(".*[.]jpg"))
-                throw new WebException(2,"不支持该图片作为书页面");
+            if (!coverImg.getOriginalFilename().matches(".*[.]jpg")) {
+                throw new WebException(2, "不支持该图片作为书页面");
+            }
             File coverFile = new File(SystemConfig.getCoverPath() + coverImg.getOriginalFilename());
             coverImg.transferTo(coverFile);
             o.setCoverName(coverImg.getOriginalFilename());

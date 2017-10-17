@@ -1,6 +1,6 @@
 package com.kiss.cache;
 
-import com.kiss.Exception.CacheException;
+import com.kiss.cache.exception.CacheException;
 import com.kiss.cache.supper.MemoryCache;
 
 /**
@@ -20,7 +20,7 @@ public class CacheFactory {
     /**
      * 获取指定缓存方式的缓存区
      * */
-    public final static Cache getSpecifiedCache(Class<? extends Cache> clazz) throws CacheException{
+    public final static Cache getSpecifiedCache(Class<? extends Cache> clazz) throws CacheException {
        return getSpecifiedCache(clazz,Cache.DEFAULT_CACHE_SIZE, Cache.DEFAULT_FULL_RESOLVE_TYPE);
     }
 
