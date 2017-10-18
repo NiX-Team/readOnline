@@ -3,7 +3,6 @@ package com.kiss.cache.supper;
 import com.kiss.cache.Cache;
 import com.kiss.cache.exception.CacheException;
 import com.kiss.cache.util.ObjectUtil;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -69,9 +68,11 @@ public class MemoryCache implements Cache<CacheKey>{
             case covering_after:return putByDoNoting(cacheKey);
             case covering_before:return putByDoNoting(cacheKey);
             case covering_rand:return putByDoNoting(cacheKey);
+            default:return false;
         }
-        return false;
     }
+
+
 
     /**
      * 不做任何操作的溢出缓存策略
@@ -94,9 +95,17 @@ public class MemoryCache implements Cache<CacheKey>{
 
 
 
+    /**
+     * 不需要实时的获取最新缓存信息不需要对get与put方法同步加锁
+     * */
     @Override
     public CacheKey get(String cacheKey) {
         return (CacheKey) ObjectUtil.ByteToObject(cache.get(cacheKey));
+    }
+
+    @Override
+    public boolean remove(String key) {
+        return cache.remove(key) != null;
     }
 
     @Override

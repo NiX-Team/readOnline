@@ -54,4 +54,9 @@ public class RedisCache implements Cache<CacheKey>{
     public int getPosition() {
         return 0;
     }
+
+    @Override
+    public boolean remove(String key) {
+        return false;
+    }
 }

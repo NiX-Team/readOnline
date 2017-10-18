@@ -97,6 +97,13 @@ public interface Cache<C extends CacheKey> {
     int getPosition();
 
     /**
+     * 删除一个缓存对象
+     * @param key 缓存key值
+     * @return 删除是否成功
+     * */
+    boolean remove(String key);
+
+    /**
      * 缓存区共有配置
      * */
     class Config{

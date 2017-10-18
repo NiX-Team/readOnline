@@ -1,6 +1,7 @@
 package com.kiss;
 import com.kiss.cache.Cache;
 import com.kiss.cache.CacheFactory;
+import com.kiss.common.Const;
 import com.kiss.common.TxtRead;
 import com.kiss.common.supper.NioTxtRead;
 import org.junit.Test;
@@ -10,6 +11,10 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Random;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class NioTest {
 
@@ -44,7 +49,18 @@ public class NioTest {
     }
 
     @Test
-    public void test() {
-        assert false : "sss";
+    public void test() throws InterruptedException {
+//        final BlockingDeque<Runnable> workQueue = new LinkedBlockingDeque<>();
+//        final ThreadPoolExecutor THREAD_POOL = new ThreadPoolExecutor(200,200,0, TimeUnit.SECONDS,workQueue);
+//
+//        workQueue.add(() -> System.out.println("ok"));
+//        THREAD_POOL.execute(workQueue.poll());
+//        workQueue.add(() -> System.out.println("ok1"));
+//        Thread.sleep(1000);
+//        workQueue.add(() -> System.out.println("ok2"));
+
+        Const.THREAD_RUNNABLE.addRunnable(() -> System.out.println("ok"));
+        Const.THREAD_RUNNABLE.addRunnable(() -> System.out.println("ok1"));
+        Const.THREAD_RUNNABLE.addRunnable(() -> System.out.println("ok2"));
     }
 }

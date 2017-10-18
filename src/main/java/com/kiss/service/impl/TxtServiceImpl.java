@@ -1,6 +1,7 @@
 package com.kiss.service.impl;
 
 import com.kiss.Exception.WebException;
+import com.kiss.common.TxtMonitoring;
 import com.kiss.common.TxtRead;
 import com.kiss.common.config.SystemConfig;
 import com.kiss.common.supper.NioTxtRead;
@@ -8,6 +9,7 @@ import com.kiss.dto.TxtChapterDto;
 import com.kiss.jpa.TxtModelJpa;
 import com.kiss.model.TxtChapterMsgModel;
 import com.kiss.model.TxtModel;
+import com.kiss.monitor.BeMonitorObj;
 import com.kiss.service.base.BaseServiceImpl;
 import com.kiss.service.TxtService;
 import com.kiss.util.CommonUtil;
@@ -23,8 +25,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author 11723
+ */
 @Service
-public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
+public class TxtServiceImpl extends BaseServiceImpl implements TxtService,BeMonitorObj{
     @Autowired
     private TxtModelJpa txtJpa;
 
@@ -78,10 +83,56 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
     }
 
 
+    
+
+
     @Override
     public TxtModel findBySn(String sn) {
         TxtModel model = new TxtModel();
         model.setSn(sn);
         return (TxtModel) jpaRepository.findOne(Example.of(model));
+    }
+
+    @Override
+    public boolean addMonitor() {
+        return TxtMonitoring.TXT_MONITORING.addBeMonitorObj(this);
+    }
+
+    @Override
+    public boolean getStartMission() {
+        return IDENTIFICATION.isStartMission();
+    }
+
+    @Override
+    public void setStartMission(boolean startMission) {
+        IDENTIFICATION.setStartMission(startMission);
+    }
+
+    @Override
+    public void run() {
+        System.out.println("ok");
+        setStatus(false);
+
+    }
+
+    @Override
+    public void setAllowRun(boolean allowRun) {
+        IDENTIFICATION.setAllowRun(allowRun);
+    }
+
+    @Override
+    public boolean getAllowRun() {
+        return IDENTIFICATION.isAllowRun();
+    }
+
+    @Override
+    public void setStatus(boolean status) {
+        IDENTIFICATION.setStatus(status);
+
+    }
+
+    @Override
+    public boolean getStatus() {
+        return IDENTIFICATION.isStatus();
     }
 }
