@@ -3,36 +3,44 @@ package com.kiss.service.base;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class BaseServiceImpl implements BaseService{
-    protected JpaRepository jpaRepository;
+/**
+ * @author 11723
+ */
+public abstract class BaseServiceImpl<M extends Object,ID extends Serializable> implements BaseService<M,ID>{
+    protected JpaRepository<M,ID> jpaRepository;
 
+    /**
+     * 初始化
+     * */
     @PostConstruct
     protected abstract void init();
 
     @Override
-    public void save(Object o) {
+    public void save(M o) {
         jpaRepository.save(o);
     }
 
     @Override
-    public List findAll() {
-        return jpaRepository.findAll();
-    }
-
-    @Override
-    public Object findById(Integer id) {
-        return jpaRepository.findOne(id);
-    }
-
-    @Override
-    public void delete(Object o) {
+    public void delete(M o) {
         jpaRepository.delete(o);
     }
 
     @Override
-    public void update(Object o) {
+    public void update(M o) {
         jpaRepository.saveAndFlush(o);
+    }
+
+    @Override
+    public M findById(ID id) {
+        return jpaRepository.findOne(id);
+    }
+
+    @Override
+    public List findAll() {
+        return null;
     }
 }

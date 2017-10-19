@@ -7,45 +7,44 @@ import com.kiss.monitor.BeMonitorObj;
 import com.kiss.util.log.LogKit;
 
 import java.io.File;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author 11723
  */
 public class TxtModelCount  implements BeMonitorObj {
-    private AtomicInteger count = new AtomicInteger(0);
-    private String cacheKey;
-    private File txtFile;
 
+
+    /**
+     * 计数
+     * */
+    private final AtomicInteger count = new AtomicInteger(0);
+    /**
+     * 缓存key值
+     * */
+    private String cacheKey;
+    /**
+     * txt文件
+     * */
+    private final File txtFile;
+    /**
+     * 最后阅读时间
+     * */
+    private Date endTime = new Date();
+
+
+    /**
+     * 内置锁
+     * */
     private final Object clock = new Object();
 
     private int min = SystemConfig.getCacheBoundary();
 
     public TxtModelCount(File txtFile) {
         this.txtFile = txtFile;
-        autoCount();
         addMonitor();
     }
-
-
-    /**
-     * 自减开启
-     * */
-    private void autoCount() {
-        Const.addRunnable(() -> {
-            while (true) {
-                try {
-                    subtraction();
-                    Thread.sleep(5*60*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-
-
 
     public void add() {
         count.getAndIncrement();
@@ -53,6 +52,7 @@ public class TxtModelCount  implements BeMonitorObj {
             if (count.get() > min && getCacheKey() == null) {
                 setStartMission(true);
             }
+            endTime = new Date();
         }
     }
 
@@ -66,11 +66,6 @@ public class TxtModelCount  implements BeMonitorObj {
                 count.set(0);
             }
         }
-    }
-
-
-    public int getCount() {
-        return count.intValue();
     }
 
 
@@ -131,5 +126,9 @@ public class TxtModelCount  implements BeMonitorObj {
 
     public void setCacheKey(String cacheKey) {
         this.cacheKey = cacheKey;
+    }
+
+    public Date getEndTime() {
+        return endTime;
     }
 }

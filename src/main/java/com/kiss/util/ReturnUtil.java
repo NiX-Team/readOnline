@@ -2,6 +2,9 @@ package com.kiss.util;
 
 import com.kiss.common.ReturnObject;
 
+/**
+ * @author 11723
+ */
 public final class ReturnUtil {
     private final static int SUCCESS_CODE = 1;
     private final static String SUCCESS_MSG = "SUCCESS";

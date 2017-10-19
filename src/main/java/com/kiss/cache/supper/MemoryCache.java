@@ -4,8 +4,6 @@ import com.kiss.cache.Cache;
 import com.kiss.cache.exception.CacheException;
 import com.kiss.cache.util.ObjectUtil;
 import com.kiss.util.log.LogKit;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -107,7 +105,9 @@ public class MemoryCache implements Cache<CacheKey>{
     @Override
     public CacheKey get(String cacheKey) {
         LogKit.info("获取缓存区块 cacheKey=" + cacheKey);
-        if (cacheKey == null) return null;
+        if (cacheKey == null){
+            return null;
+        }
         return (CacheKey) ObjectUtil.ByteToObject(cache.get(cacheKey));
     }
 

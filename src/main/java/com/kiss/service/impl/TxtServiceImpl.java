@@ -12,8 +12,9 @@ import com.kiss.jpa.TxtModelJpa;
 import com.kiss.model.TxtChapterMsgModel;
 import com.kiss.model.TxtModel;
 import com.kiss.monitor.BeMonitorObj;
-import com.kiss.service.base.BaseServiceImpl;
+import com.kiss.service.base.BaseService;
 import com.kiss.service.TxtService;
+import com.kiss.service.base.BaseServiceImpl;
 import com.kiss.service.supper.TxtContentByteCache;
 import com.kiss.service.supper.TxtModelCount;
 import com.kiss.util.CommonUtil;
@@ -25,11 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author 11723
  */
 @Service
-public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
+public class TxtServiceImpl extends BaseServiceImpl<TxtModel,String> implements TxtService{
 
     private final static ConcurrentHashMap<String,TxtModelCount> TXT_MODEL_COUNT = new ConcurrentHashMap<>();
 
@@ -80,12 +83,12 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
         TxtModel model = findBySn(txtSn);
         File txtFile = new File(SystemConfig.getTxtPath() + model.getTxtName());
         String date;
-        txtModeAddOne(model);
+        TxtModelCount txtModelCount = txtModeAddOne(model);
         if (model.getChapters().getNioOffsets() != null) {
             //nio读取方式
             int startOffset = Math.toIntExact(txtChapterDto.getNioOffset());
             int endOffset = Math.toIntExact(model.getChapters().getNioOffsets()[txtChapterDto.getChapter() + 1]);
-            byte[] bytes = getCacheContent(model);
+            byte[] bytes = getCacheContent(txtModelCount);
             if (bytes == null){
                 date = TxtUtil.readStartToEndByNio(txtFile,startOffset,endOffset,"GBK");
             }else {
@@ -100,8 +103,16 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
         return date.substring((page-1)*limit,page*limit > date.length() ? date.length() : page*limit);
     }
 
-    private byte[] getCacheContent(TxtModel model) {
-        TxtModelCount txtModelCount = TXT_MODEL_COUNT.get(model.getSn());
+    @Override
+    public boolean delete(String txtSn) throws WebException {
+        TxtModelCount txtModelCount = TXT_MODEL_COUNT.remove(txtSn);
+        TxtModel txtModel = findBySn(txtSn);
+        txtModelCount.close();
+        delete(txtModel);
+        return true;
+    }
+
+    private byte[] getCacheContent(TxtModelCount txtModelCount) {
         CacheKey cacheKey = Const.CACHE.get(txtModelCount.getCacheKey());
         if (cacheKey == null) {
             return null;
@@ -110,28 +121,44 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
         }
     }
 
-
     /**
      * txt阅读加一
      * */
-    private void txtModeAddOne(TxtModel model) {
+    private TxtModelCount txtModeAddOne(TxtModel model) {
         synchronized(TXT_MODEL_COUNT){
             TxtModelCount txtModelCount = TXT_MODEL_COUNT.get(model.getSn());
             if (txtModelCount == null) {
                 txtModelCount = new TxtModelCount(new File(SystemConfig.getTxtPath() + model.getTxtName()));
+                txtModelCount.add();
                 TXT_MODEL_COUNT.put(model.getSn(),txtModelCount);
+                return txtModelCount;
             }else {
                 txtModelCount.add();
+                return txtModelCount;
             }
         }
     }
 
-
-    @Override
-    public void count(HttpServletRequest request, String txtSn) {
-
+    @PostConstruct
+    private void autoTxtCount() {
+        Const.addRunnable(() -> {
+            while (true) {
+                for (Map.Entry<String, TxtModelCount> entry : TXT_MODEL_COUNT.entrySet()) {
+                    if (entry.getValue().getEndTime().getTime() < System.currentTimeMillis() - 0.8 * 60 * 1000) {
+                        entry.getValue().close();
+                        TXT_MODEL_COUNT.remove(entry.getKey());
+                    } else {
+                        entry.getValue().subtraction();
+                    }
+                }
+                try {
+                    Thread.sleep(1 * 60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
-
 
 
     @Override

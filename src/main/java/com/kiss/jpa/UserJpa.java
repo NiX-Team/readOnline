@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * @author 11723
+ */
 public interface UserJpa  extends JpaRepository<UserModel, Integer> {
     @Override
     UserModel getOne(Integer integer);

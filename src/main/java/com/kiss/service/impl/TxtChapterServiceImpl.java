@@ -1,5 +1,4 @@
 package com.kiss.service.impl;
-
 import com.kiss.dto.TxtChapterDto;
 import com.kiss.jpa.TxtChapterJpa;
 import com.kiss.model.TxtChapterMsgModel;
@@ -10,11 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * @author 11723
+ */
 @Service
-public class TxtChapterServiceImpl  extends BaseServiceImpl implements TxtChapterService {
+public class TxtChapterServiceImpl  extends BaseServiceImpl<TxtChapterMsgModel,Integer> implements TxtChapterService {
 
     @Autowired
     private TxtChapterJpa chapterJpa;
@@ -28,7 +31,8 @@ public class TxtChapterServiceImpl  extends BaseServiceImpl implements TxtChapte
     public List chapterList(String txtSn, Integer page, Integer limit, String sort) {
         TxtChapterMsgModel model = new TxtChapterMsgModel();
         model.setTxtSn(txtSn);
-        model = (TxtChapterMsgModel) jpaRepository.findOne(Example.of(model,ExampleMatcher.matching().withMatcher("txtSn", ExampleMatcher.GenericPropertyMatchers.exact())));
+        model = jpaRepository.findOne(Example.of(model,ExampleMatcher.matching().withMatcher("txtSn", ExampleMatcher.GenericPropertyMatchers.exact())));
+        Assert.notNull(model,"不存在该图书");
         List list = new ArrayList<>();
         for (int i = 0 ;i < limit;i ++ ) {
             TxtChapterDto model1 = new TxtChapterDto();
@@ -50,7 +54,9 @@ public class TxtChapterServiceImpl  extends BaseServiceImpl implements TxtChapte
 
     @Override
     public TxtChapterDto nextChapter(TxtModel txtModel, Integer nowChapter) {
-        if (nowChapter == txtModel.getChapters().getChapters().length - 1) return null;
+        if (nowChapter == txtModel.getChapters().getChapters().length - 1) {
+            return null;
+        }
         TxtChapterDto dto = new TxtChapterDto();
         TxtChapterMsgModel model = txtModel.getChapters();
         dto.setChapter(model.getChapters()[nowChapter + 1]);

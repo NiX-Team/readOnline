@@ -17,6 +17,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.System.*;
+
 public class NioTest {
 
     @Test
@@ -25,7 +27,7 @@ public class NioTest {
             FileChannel fileChannel = new RandomAccessFile(new File("E:\\test\\txt\\诛仙.txt"),"r").getChannel();
             ByteBuffer buffer = ByteBuffer.allocate((int) fileChannel.size());
             fileChannel.read(buffer);
-            System.out.println(new String(buffer.array(),1200,3141-1200,"GBK"));
+            out.println(new String(buffer.array(),1200,3141-1200,"GBK"));
 
         }  catch (Exception e) {
             e.printStackTrace();
@@ -41,11 +43,11 @@ public class NioTest {
             cache1.setChannel("hello world");
             cache.put(cache1);
             String fileChannel1 =  cache.get(cache1.getCacheKey()).getChannel();
-            System.out.println(fileChannel1);
+            out.println(fileChannel1);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("hh".getBytes() instanceof Serializable);
+        out.println("hh".getBytes() instanceof Serializable);
 
     }
 
@@ -59,11 +61,13 @@ public class NioTest {
 //        threadPoolExecutor.execute(() -> System.out.println("1"));
 
 
-        Const.addRunnable(() -> System.out.println("k1"));
-        Const.addRunnable(() -> System.out.println("k2"));
-        Const.addRunnable(() -> System.out.println("k3"));
-        Const.addRunnable(() -> System.out.println("k4"));
-        System.out.println(Const.CACHE.toString());
+//        Const.addRunnable(() -> System.out.println("k1"));
+//        Const.addRunnable(() -> System.out.println("k2"));
+//        Const.addRunnable(() -> System.out.println("k3"));
+//        Const.addRunnable(() -> System.out.println("k4"));
+//        System.out.println(Const.CACHE.toString());
+
+        assert false : "ss";
 
     }
 

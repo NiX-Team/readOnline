@@ -1,24 +1,23 @@
 package com.kiss.service;
 
+import com.kiss.Exception.WebException;
 import com.kiss.dto.TxtChapterDto;
-import com.kiss.model.TxtChapterMsgModel;
 import com.kiss.model.TxtModel;
 import com.kiss.service.base.BaseService;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.List;
-
+/**
+ * @author 11723
+ */
 @Service
-public interface TxtService extends BaseService {
+public interface TxtService extends BaseService<TxtModel,String> {
     /**
      * 添加一本txt图书
      * @param o TXTModel 存放txt信息
      * @param txtFile txt文件
      * @param coverImg txt图书封面图片
+     * @throws Exception
      * */
     void save(TxtModel o, MultipartFile txtFile,MultipartFile coverImg) throws Exception;
 
@@ -42,9 +41,11 @@ public interface TxtService extends BaseService {
     TxtModel findBySn(String sn);
 
     /**
-     * 对读者阅读的图书计数
-     * @param request 在线阅读请求
+     * 删除txt图书
      * @param txtSn txt图书编号
+     * @return 删除是否成功
+     * @throws WebException web异常
      * */
-    void count(HttpServletRequest request,String txtSn);
+    boolean delete(String txtSn) throws WebException;
+
 }

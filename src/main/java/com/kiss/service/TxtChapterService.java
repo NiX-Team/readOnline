@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author 11723
+ */
 @Service
-public interface TxtChapterService  extends BaseService {
+public interface TxtChapterService  extends BaseService<TxtChapterMsgModel,Integer> {
 
 
     /**

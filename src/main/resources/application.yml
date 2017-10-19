@@ -4,6 +4,7 @@ system-config:
   txtPath: "E://test/txt/"
   coverPath: "E://test/cover/"
   defaultCoverImg: "default.jpg"
+  cacheBoundary: 2
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver

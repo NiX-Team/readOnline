@@ -26,8 +26,6 @@ public final class SystemConfig {
      * */
     private static String defaultCoverImg;
 
-
-
     /**
      * txt图书并发边界进行缓存操作
      * */

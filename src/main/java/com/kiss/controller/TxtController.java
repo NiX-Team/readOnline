@@ -1,5 +1,6 @@
 package com.kiss.controller;
 
+import com.kiss.Exception.WebException;
 import com.kiss.common.ReturnObject;
 import com.kiss.dto.TxtChapterDto;
 import com.kiss.model.TxtModel;
@@ -78,5 +79,14 @@ public class TxtController {
         map.put("txt",txtService.readChapter(txtSn,dto,page,limit));
         map.put("nextChapter",chapterService.nextChapter(txtService.findBySn(txtSn),dto.getChapter()));
         return ReturnUtil.success(map);
+    }
+
+
+    /**
+     * 删除txt图书
+     * */
+    @GetMapping("/delete/{txtSn}")
+    public ReturnObject delete(@PathVariable("txtSn") String txtSn) throws WebException {
+        return ReturnUtil.success(txtService.delete(txtSn));
     }
 }
