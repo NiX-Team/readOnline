@@ -51,15 +51,20 @@ public class NioTest {
 
     @Test
     public void test() throws InterruptedException {
-        BlockingDeque<Runnable> WORK_QUEUE = new LinkedBlockingDeque<>();
-        ThreadPoolExecutor threadPoolExecutor =   new ThreadPoolExecutor(200,200,0, TimeUnit.SECONDS,WORK_QUEUE);
+//        BlockingDeque<Runnable> WORK_QUEUE = new LinkedBlockingDeque<>();
+//        ThreadPoolExecutor threadPoolExecutor =   new ThreadPoolExecutor(200,200,0, TimeUnit.SECONDS,WORK_QUEUE);
+//
+//        WORK_QUEUE.add(() -> System.out.println("1"));
+//        threadPoolExecutor.execute(WORK_QUEUE.poll());
+//        threadPoolExecutor.execute(() -> System.out.println("1"));
 
-        WORK_QUEUE.add(() -> System.out.println("1"));
-        threadPoolExecutor.execute(WORK_QUEUE.poll());
-        threadPoolExecutor.execute(() -> System.out.println("1"));
-//        WORK_QUEUE.add(() -> System.out.println("2"));
-//        WORK_QUEUE.add(() -> System.out.println("3"));
-//        WORK_QUEUE.add(() -> System.out.println("4"));
+
+        Const.addRunnable(() -> System.out.println("k1"));
+        Const.addRunnable(() -> System.out.println("k2"));
+        Const.addRunnable(() -> System.out.println("k3"));
+        Const.addRunnable(() -> System.out.println("k4"));
+        System.out.println(Const.CACHE.toString());
+
     }
 
 }

@@ -45,7 +45,7 @@ public class TxtMonitoring implements Monitor {
                         if (obj.getStartMission() && obj.getAllowRun()) {
                             obj.setAllowRun(false);
                             Const.addRunnable(() -> obj.run());
-                            LogKit.info("执行了" + obj.getClass() + "的任务");
+                            LogKit.info("添加" + obj.getClass() + "的任务");
                         }
                     }
                 }

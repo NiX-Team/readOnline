@@ -2,6 +2,7 @@ package com.kiss.service.supper;
 
 import com.kiss.common.Const;
 import com.kiss.common.TxtMonitoring;
+import com.kiss.common.config.SystemConfig;
 import com.kiss.monitor.BeMonitorObj;
 import com.kiss.util.log.LogKit;
 
@@ -18,7 +19,7 @@ public class TxtModelCount  implements BeMonitorObj {
 
     private final Object clock = new Object();
 
-    private int min = 10;
+    private int min = SystemConfig.getCacheBoundary();
 
     public TxtModelCount(File txtFile) {
         this.txtFile = txtFile;
@@ -33,8 +34,8 @@ public class TxtModelCount  implements BeMonitorObj {
     private void autoCount() {
         Const.addRunnable(() -> {
             while (true) {
-                subtraction();
                 try {
+                    subtraction();
                     Thread.sleep(5*60*1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
