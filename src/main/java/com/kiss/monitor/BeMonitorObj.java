@@ -49,17 +49,11 @@ public interface BeMonitorObj {
      * */
     void run();
 
-    /**
-     * 取消监控状态
-     * @param status
-     * */
-    void setStatus(boolean status);
 
     /**
-     * 查看被监控对象是否打开监控状态
-     * @return
+     * 断开与监控方的联系
      * */
-    boolean getStatus();
+    void close();
 
 
     /**
@@ -74,18 +68,7 @@ public interface BeMonitorObj {
          * 是否允许任务执行
          * */
         private boolean allowRun = true;
-        /**
-         * 被监视者的状态 （是否允许被监视）
-         * */
-        private boolean status = true;
 
-        public boolean isStatus() {
-            return status;
-        }
-
-        public void setStatus(boolean status) {
-            this.status = status;
-        }
 
         public boolean isStartMission() {
             return startMission;

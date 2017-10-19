@@ -3,6 +3,7 @@ import com.kiss.cache.Cache;
 import com.kiss.cache.CacheFactory;
 import com.kiss.common.Const;
 import com.kiss.common.TxtRead;
+import com.kiss.common.config.SystemConfig;
 import com.kiss.common.supper.NioTxtRead;
 import org.junit.Test;
 import org.springframework.util.Assert;
@@ -50,17 +51,15 @@ public class NioTest {
 
     @Test
     public void test() throws InterruptedException {
-//        final BlockingDeque<Runnable> workQueue = new LinkedBlockingDeque<>();
-//        final ThreadPoolExecutor THREAD_POOL = new ThreadPoolExecutor(200,200,0, TimeUnit.SECONDS,workQueue);
-//
-//        workQueue.add(() -> System.out.println("ok"));
-//        THREAD_POOL.execute(workQueue.poll());
-//        workQueue.add(() -> System.out.println("ok1"));
-//        Thread.sleep(1000);
-//        workQueue.add(() -> System.out.println("ok2"));
+        BlockingDeque<Runnable> WORK_QUEUE = new LinkedBlockingDeque<>();
+        ThreadPoolExecutor threadPoolExecutor =   new ThreadPoolExecutor(200,200,0, TimeUnit.SECONDS,WORK_QUEUE);
 
-        Const.THREAD_RUNNABLE.addRunnable(() -> System.out.println("ok"));
-        Const.THREAD_RUNNABLE.addRunnable(() -> System.out.println("ok1"));
-        Const.THREAD_RUNNABLE.addRunnable(() -> System.out.println("ok2"));
+        WORK_QUEUE.add(() -> System.out.println("1"));
+        threadPoolExecutor.execute(WORK_QUEUE.poll());
+        threadPoolExecutor.execute(() -> System.out.println("1"));
+//        WORK_QUEUE.add(() -> System.out.println("2"));
+//        WORK_QUEUE.add(() -> System.out.println("3"));
+//        WORK_QUEUE.add(() -> System.out.println("4"));
     }
+
 }

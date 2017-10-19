@@ -1,6 +1,8 @@
 package com.kiss.service.impl;
 
 import com.kiss.Exception.WebException;
+import com.kiss.cache.supper.CacheKey;
+import com.kiss.common.Const;
 import com.kiss.common.TxtMonitoring;
 import com.kiss.common.TxtRead;
 import com.kiss.common.config.SystemConfig;
@@ -12,6 +14,8 @@ import com.kiss.model.TxtModel;
 import com.kiss.monitor.BeMonitorObj;
 import com.kiss.service.base.BaseServiceImpl;
 import com.kiss.service.TxtService;
+import com.kiss.service.supper.TxtContentByteCache;
+import com.kiss.service.supper.TxtModelCount;
 import com.kiss.util.CommonUtil;
 import com.kiss.util.TxtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +25,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author 11723
  */
 @Service
-public class TxtServiceImpl extends BaseServiceImpl implements TxtService,BeMonitorObj{
+public class TxtServiceImpl extends BaseServiceImpl implements TxtService{
+
+    private final static ConcurrentHashMap<String,TxtModelCount> TXT_MODEL_COUNT = new ConcurrentHashMap<>();
+
+
     @Autowired
     private TxtModelJpa txtJpa;
 
@@ -68,11 +80,17 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService,BeMoni
         TxtModel model = findBySn(txtSn);
         File txtFile = new File(SystemConfig.getTxtPath() + model.getTxtName());
         String date;
+        txtModeAddOne(model);
         if (model.getChapters().getNioOffsets() != null) {
             //nio读取方式
             int startOffset = Math.toIntExact(txtChapterDto.getNioOffset());
             int endOffset = Math.toIntExact(model.getChapters().getNioOffsets()[txtChapterDto.getChapter() + 1]);
-            date = TxtUtil.readStartToEndByNio(txtFile,startOffset,endOffset,"GBK");
+            byte[] bytes = getCacheContent(model);
+            if (bytes == null){
+                date = TxtUtil.readStartToEndByNio(txtFile,startOffset,endOffset,"GBK");
+            }else {
+                date = TxtUtil.readStartToEndByBytes(bytes,startOffset,endOffset,"GBK");
+            }
         }else {
             //stream读取方式
             Long startLine = txtChapterDto.getOffset();
@@ -82,8 +100,38 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService,BeMoni
         return date.substring((page-1)*limit,page*limit > date.length() ? date.length() : page*limit);
     }
 
+    private byte[] getCacheContent(TxtModel model) {
+        TxtModelCount txtModelCount = TXT_MODEL_COUNT.get(model.getSn());
+        CacheKey cacheKey = Const.CACHE.get(txtModelCount.getCacheKey());
+        if (cacheKey == null) {
+            return null;
+        }else {
+            return ((TxtContentByteCache)cacheKey).getContent();
+        }
+    }
 
-    
+
+    /**
+     * txt阅读加一
+     * */
+    private void txtModeAddOne(TxtModel model) {
+        synchronized(TXT_MODEL_COUNT){
+            TxtModelCount txtModelCount = TXT_MODEL_COUNT.get(model.getSn());
+            if (txtModelCount == null) {
+                txtModelCount = new TxtModelCount(new File(SystemConfig.getTxtPath() + model.getTxtName()));
+                TXT_MODEL_COUNT.put(model.getSn(),txtModelCount);
+            }else {
+                txtModelCount.add();
+            }
+        }
+    }
+
+
+    @Override
+    public void count(HttpServletRequest request, String txtSn) {
+
+    }
+
 
 
     @Override
@@ -93,46 +141,5 @@ public class TxtServiceImpl extends BaseServiceImpl implements TxtService,BeMoni
         return (TxtModel) jpaRepository.findOne(Example.of(model));
     }
 
-    @Override
-    public boolean addMonitor() {
-        return TxtMonitoring.TXT_MONITORING.addBeMonitorObj(this);
-    }
 
-    @Override
-    public boolean getStartMission() {
-        return IDENTIFICATION.isStartMission();
-    }
-
-    @Override
-    public void setStartMission(boolean startMission) {
-        IDENTIFICATION.setStartMission(startMission);
-    }
-
-    @Override
-    public void run() {
-        System.out.println("ok");
-        setStatus(false);
-
-    }
-
-    @Override
-    public void setAllowRun(boolean allowRun) {
-        IDENTIFICATION.setAllowRun(allowRun);
-    }
-
-    @Override
-    public boolean getAllowRun() {
-        return IDENTIFICATION.isAllowRun();
-    }
-
-    @Override
-    public void setStatus(boolean status) {
-        IDENTIFICATION.setStatus(status);
-
-    }
-
-    @Override
-    public boolean getStatus() {
-        return IDENTIFICATION.isStatus();
-    }
 }

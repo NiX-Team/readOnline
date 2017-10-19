@@ -22,7 +22,8 @@ public class MonitorTest implements BeMonitorObj {
     @Override
     public void run() {
         System.out.println("ok");
-        setStatus(false);
+        setStartMission(false);
+        setAllowRun(true);
 
     }
 
@@ -36,15 +37,11 @@ public class MonitorTest implements BeMonitorObj {
         return IDENTIFICATION.isAllowRun();
     }
 
-    @Override
-    public void setStatus(boolean status) {
-        IDENTIFICATION.setStatus(status);
 
-    }
 
     @Override
-    public boolean getStatus() {
-        return IDENTIFICATION.isStatus();
+    public void close() {
+
     }
 
     public static void main(String[] args) {

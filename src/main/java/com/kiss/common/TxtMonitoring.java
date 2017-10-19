@@ -2,7 +2,9 @@ package com.kiss.common;
 
 import com.kiss.monitor.BeMonitorObj;
 import com.kiss.monitor.Monitor;
+import com.kiss.util.log.LogKit;
 import org.springframework.stereotype.Component;
+import sun.rmi.runtime.Log;
 
 /**
  * 对txt在线阅读进行监视
@@ -19,31 +21,35 @@ public class TxtMonitoring implements Monitor {
     }
 
     @Override
-    public synchronized boolean addBeMonitorObj(BeMonitorObj obj) {
-        return BE_MONITOR_OBJS.add(obj);
+    public boolean addBeMonitorObj(BeMonitorObj obj) {
+        synchronized (BE_MONITOR_OBJS) {
+            LogKit.info("添加被监视对象：" + obj.hashCode());
+            return BE_MONITOR_OBJS.add(obj);
+        }
     }
 
     @Override
-    public synchronized void remove(BeMonitorObj obj) {
-        BE_MONITOR_OBJS.remove(obj);
+    public void remove(BeMonitorObj obj) {
+        synchronized (BE_MONITOR_OBJS) {
+            LogKit.info("移出被监视对象：" + obj.hashCode());
+            BE_MONITOR_OBJS.remove(obj);
+        }
     }
 
     @Override
     public void start() {
-        Const.THREAD_RUNNABLE.addRunnable(()->{
+        Const.addRunnable(()->{
             while (true){
-                for (BeMonitorObj obj:BE_MONITOR_OBJS) {
-                    if (!obj.getStatus()) {
-                        remove(obj);
-                    }else {
+                synchronized (BE_MONITOR_OBJS) {
+                    for (BeMonitorObj obj:BE_MONITOR_OBJS) {
                         if (obj.getStartMission() && obj.getAllowRun()) {
-                            Const.THREAD_RUNNABLE.addRunnable(() -> obj.run());
                             obj.setAllowRun(false);
+                            Const.addRunnable(() -> obj.run());
+                            LogKit.info("执行了" + obj.getClass() + "的任务");
                         }
                     }
                 }
             }
         });
-
     }
 }

@@ -3,6 +3,10 @@ package com.kiss.cache.supper;
 import com.kiss.cache.Cache;
 import com.kiss.cache.exception.CacheException;
 import com.kiss.cache.util.ObjectUtil;
+import com.kiss.util.log.LogKit;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -80,6 +84,8 @@ public class MemoryCache implements Cache<CacheKey>{
     private boolean putByDoNoting(CacheKey cacheKey) throws Exception {
         assert !isFull() : new CacheException("缓存区已满");
         byte[] bytes = cacheKey.toBytes();
+        LogKit.info("添加缓存 cacheKey=" + cacheKey.getCacheKey());
+        LogKit.info("缓存块大小为：" + bytes.length);
         if (cache.containsKey(cacheKey.getCacheKey())) {
             CacheKey agoCache = get(cacheKey.getCacheKey());
             assert (bytes.length - agoCache.toBytes().length) + getPosition() <= size() * M_SIZE : new CacheException("空间不足");
@@ -100,11 +106,14 @@ public class MemoryCache implements Cache<CacheKey>{
      * */
     @Override
     public CacheKey get(String cacheKey) {
+        LogKit.info("获取缓存区块 cacheKey=" + cacheKey);
+        if (cacheKey == null) return null;
         return (CacheKey) ObjectUtil.ByteToObject(cache.get(cacheKey));
     }
 
     @Override
     public boolean remove(String key) {
+        LogKit.info("移出缓存区块 cacheKey=" + key);
         return cache.remove(key) != null;
     }
 

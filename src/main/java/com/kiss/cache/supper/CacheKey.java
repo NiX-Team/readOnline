@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * @author 11723
  */
-public class CacheKey implements Serializable{
+public abstract class CacheKey implements Serializable{
     private final String cacheKey;
 
     public CacheKey() {
@@ -17,7 +17,5 @@ public class CacheKey implements Serializable{
         return cacheKey;
     }
 
-    public byte[] toBytes() throws Exception {
-        return ObjectUtil.ObjectToByte(this);
-    }
+    protected abstract byte[] toBytes() throws Exception ;
 }

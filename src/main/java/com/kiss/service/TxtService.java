@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,6 +36,15 @@ public interface TxtService extends BaseService {
 
     /**
      * 通过txt编号查找txt信息
+     * @param sn
+     * @return 返回txt图书信息
      * */
     TxtModel findBySn(String sn);
+
+    /**
+     * 对读者阅读的图书计数
+     * @param request 在线阅读请求
+     * @param txtSn txt图书编号
+     * */
+    void count(HttpServletRequest request,String txtSn);
 }

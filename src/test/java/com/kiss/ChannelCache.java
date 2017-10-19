@@ -12,4 +12,9 @@ public class ChannelCache extends CacheKey{
     public void setChannel(String channel) {
         this.channel = channel;
     }
+
+    @Override
+    protected byte[] toBytes() throws Exception {
+        return new byte[0];
+    }
 }
