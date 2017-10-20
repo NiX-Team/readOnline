@@ -6,6 +6,7 @@ import com.kiss.cache.exception.CacheException;
 import com.kiss.cache.supper.CacheKey;
 import com.kiss.cache.supper.MemoryCache;
 import com.kiss.common.config.SystemConfig;
+import com.kiss.monitor.Monitor;
 
 import java.util.concurrent.*;
 
@@ -30,6 +31,10 @@ public final class Const {
      * */
     public static final Cache CACHE = CacheConfig.getCache();
 
+    /**
+     * 监视器
+     * */
+    public static final Monitor MONITOR = new TxtMonitoring();
 
     /**
      * 给线程池添加任务
@@ -37,6 +42,8 @@ public final class Const {
     public static void addRunnable(Runnable work) {
         THREAD_RUNNABLE.execute(work);
     }
+
+
 
 
 

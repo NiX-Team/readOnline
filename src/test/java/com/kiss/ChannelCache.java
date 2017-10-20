@@ -14,7 +14,7 @@ public class ChannelCache extends CacheKey{
     }
 
     @Override
-    protected byte[] toBytes() throws Exception {
-        return new byte[0];
+    protected int size() {
+        return 0;
     }
 }

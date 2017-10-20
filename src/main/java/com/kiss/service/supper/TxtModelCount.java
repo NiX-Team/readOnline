@@ -4,16 +4,18 @@ import com.kiss.common.Const;
 import com.kiss.common.TxtMonitoring;
 import com.kiss.common.config.SystemConfig;
 import com.kiss.monitor.BeMonitorObj;
+import com.kiss.monitor.Monitor;
 import com.kiss.util.log.LogKit;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Observer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author 11723
  */
-public class TxtModelCount  implements BeMonitorObj {
+public class TxtModelCount  extends BeMonitorObj {
 
 
     /**
@@ -33,7 +35,6 @@ public class TxtModelCount  implements BeMonitorObj {
      * */
     private Date endTime = new Date();
 
-
     /**
      * 内置锁
      * */
@@ -43,47 +44,36 @@ public class TxtModelCount  implements BeMonitorObj {
 
     public TxtModelCount(File txtFile) {
         this.txtFile = txtFile;
-        addMonitor();
+        addMonitor(Const.MONITOR);
     }
 
+    /**
+     * 计数加一
+     * */
     public void add() {
         count.getAndIncrement();
         synchronized (clock) {
             if (count.get() > min && getCacheKey() == null) {
-                setStartMission(true);
+                start();
             }
             endTime = new Date();
         }
     }
 
+    /**
+     * 自减
+     * */
     public void subtraction() {
         synchronized (clock) {
             count.getAndAdd(-10);
             if (count.get() < min && getCacheKey() != null) {
-                setStartMission(true);
+                start();
             }
             if (count.get() < 0) {
                 count.set(0);
             }
         }
     }
-
-
-    @Override
-    public boolean addMonitor() {
-        return TxtMonitoring.TXT_MONITORING.addBeMonitorObj(this);
-    }
-
-    @Override
-    public boolean getStartMission() {
-        return IDENTIFICATION.isStartMission();
-    }
-
-    @Override
-    public void setStartMission(boolean startMission) {
-        IDENTIFICATION.setStartMission(startMission);
-    }
-
     @Override
     public void run() {
         LogKit.info("开始执行缓存操作");
@@ -97,26 +87,17 @@ public class TxtModelCount  implements BeMonitorObj {
                 setCacheKey(null);
             }
         }
-        setStartMission(false);
-        setAllowRun(true);
-    }
-
-    @Override
-    public void setAllowRun(boolean allowRun) {
-        IDENTIFICATION.setAllowRun(allowRun);
-    }
-
-    @Override
-    public boolean getAllowRun() {
-        return IDENTIFICATION.isAllowRun();
     }
 
 
     @Override
     public void close() {
         LogKit.info("准备关闭该监控对象···");
-        Const.CACHE.remove(cacheKey);
-        TxtMonitoring.TXT_MONITORING.remove(this);
+        if (getCacheKey() != null){
+            Const.CACHE.remove(cacheKey);
+        }
+        deleteObservers();
+        LogKit.info("关闭成功···");
     }
 
 

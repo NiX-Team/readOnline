@@ -165,7 +165,7 @@ public class TxtServiceImpl extends BaseServiceImpl<TxtModel,String> implements 
     public TxtModel findBySn(String sn) {
         TxtModel model = new TxtModel();
         model.setSn(sn);
-        return (TxtModel) jpaRepository.findOne(Example.of(model));
+        return jpaRepository.findOne(Example.of(model));
     }
 
 

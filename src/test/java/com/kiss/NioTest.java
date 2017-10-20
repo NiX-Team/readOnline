@@ -11,6 +11,8 @@ import org.springframework.util.Assert;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -51,24 +53,31 @@ public class NioTest {
 
     }
 
+    public static final Monitor monitor = new Monitor();
+    public static final BeMonitor beMonitor = new BeMonitor();
+
     @Test
     public void test() throws InterruptedException {
-//        BlockingDeque<Runnable> WORK_QUEUE = new LinkedBlockingDeque<>();
-//        ThreadPoolExecutor threadPoolExecutor =   new ThreadPoolExecutor(200,200,0, TimeUnit.SECONDS,WORK_QUEUE);
-//
-//        WORK_QUEUE.add(() -> System.out.println("1"));
-//        threadPoolExecutor.execute(WORK_QUEUE.poll());
-//        threadPoolExecutor.execute(() -> System.out.println("1"));
-
-
-//        Const.addRunnable(() -> System.out.println("k1"));
-//        Const.addRunnable(() -> System.out.println("k2"));
-//        Const.addRunnable(() -> System.out.println("k3"));
-//        Const.addRunnable(() -> System.out.println("k4"));
-//        System.out.println(Const.CACHE.toString());
-
-        assert false : "ss";
-
+        beMonitor.addObserver(monitor);
+        new Thread(() -> {
+            beMonitor.setName("ok1");
+        }).start();
+        beMonitor.setName("ok3");
+        beMonitor.setName("ok2");
     }
 
+}
+class BeMonitor extends Observable{
+    public void setName(String name) {
+        setChanged();
+        notifyObservers(name);
+    }
+
+}
+class Monitor implements Observer{
+
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println(arg);
+    }
 }
