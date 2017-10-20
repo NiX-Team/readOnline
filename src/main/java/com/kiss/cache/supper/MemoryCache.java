@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * */
 public class MemoryCache implements Cache<CacheKey>{
 
-    private final ConcurrentHashMap<String,byte[]> cache = new ConcurrentHashMap();
+    private final ConcurrentHashMap<String,CacheKey> cache = new ConcurrentHashMap();
 
     @Override
     public int size() {
@@ -81,18 +81,21 @@ public class MemoryCache implements Cache<CacheKey>{
      * */
     private boolean putByDoNoting(CacheKey cacheKey) throws Exception {
         assert !isFull() : new CacheException("缓存区已满");
-        byte[] bytes = cacheKey.toBytes();
+        int size = cacheKey.size();
+        if (size == 0) {
+            throw new Exception("获取cacheKey对象字节大小失败");
+        }
         LogKit.info("添加缓存 cacheKey=" + cacheKey.getCacheKey());
-        LogKit.info("缓存块大小为：" + bytes.length);
+        LogKit.info("缓存块大小为：" + size);
         if (cache.containsKey(cacheKey.getCacheKey())) {
             CacheKey agoCache = get(cacheKey.getCacheKey());
-            assert (bytes.length - agoCache.toBytes().length) + getPosition() <= size() * M_SIZE : new CacheException("空间不足");
-            CONFIG.setPosition(getPosition() + (bytes.length - agoCache.toBytes().length));
-            cache.replace(cacheKey.getCacheKey(),cacheKey.toBytes());
+            assert (size - agoCache.size()) + getPosition() <= size() * M_SIZE : new CacheException("空间不足");
+            CONFIG.setPosition(getPosition() + (size - agoCache.size()));
+            cache.replace(cacheKey.getCacheKey(),cacheKey);
         }else {
-            assert bytes.length + getPosition() <= size() * M_SIZE : new CacheException("剩余空间不足");
-            CONFIG.setPosition(getPosition() + bytes.length);
-            cache.put(cacheKey.getCacheKey(), bytes);
+            assert size + getPosition() <= size() * M_SIZE : new CacheException("剩余空间不足");
+            CONFIG.setPosition(getPosition() + size);
+            cache.put(cacheKey.getCacheKey(), cacheKey);
         }
         return true;
     }
@@ -108,7 +111,7 @@ public class MemoryCache implements Cache<CacheKey>{
         if (cacheKey == null){
             return null;
         }
-        return (CacheKey) ObjectUtil.ByteToObject(cache.get(cacheKey));
+        return cache.get(cacheKey);
     }
 
     @Override

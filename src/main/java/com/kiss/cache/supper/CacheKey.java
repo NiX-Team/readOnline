@@ -16,6 +16,9 @@ public abstract class CacheKey implements Serializable{
     public String getCacheKey() {
         return cacheKey;
     }
-
-    protected abstract byte[] toBytes() throws Exception ;
+    /**
+     * 获取当前对象的字节大小
+     * @return
+     * */
+    protected abstract int size();
 }
