@@ -30,7 +30,7 @@ public class TxtController {
      * 获取txt图书列表
      * */
     @GetMapping("/all")
-    public List<TxtModel> all() {
+    public List all() {
         return txtService.findAll();
     }
 

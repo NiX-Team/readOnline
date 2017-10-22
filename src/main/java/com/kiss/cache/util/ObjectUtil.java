@@ -2,6 +2,9 @@ package com.kiss.cache.util;
 
 import java.io.*;
 
+/**
+ * @author 11723
+ */
 public final class ObjectUtil {
     /**
      * 将object转为byte数组

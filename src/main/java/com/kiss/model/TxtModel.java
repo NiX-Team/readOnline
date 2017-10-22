@@ -1,5 +1,6 @@
 package com.kiss.model;
 
+import com.kiss.dto.TxtDto;
 import com.kiss.util.CommonUtil;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
@@ -93,5 +94,9 @@ public class TxtModel implements Serializable{
     }
     public TxtModel() {
         setSn(randSn());
+    }
+
+    public TxtDto toDto() {
+        return new TxtDto(sn,name,coverName,chapters.getChapters().length);
     }
 }

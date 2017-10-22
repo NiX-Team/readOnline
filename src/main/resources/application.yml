@@ -1,8 +1,8 @@
 server:
-  port: 80
+  port: 8080
 system-config:
   txtPath: "E://test/txt/"
-  coverPath: "E://test/cover/"
+  coverPath: "G://IDEA//readOnline//readOnline//image"
   defaultCoverImg: "default.jpg"
   cacheBoundary: 2
 spring:

@@ -41,6 +41,6 @@ public abstract class BaseServiceImpl<M extends Object,ID extends Serializable> 
 
     @Override
     public List findAll() {
-        return null;
+        return jpaRepository.findAll();
     }
 }

@@ -8,6 +8,7 @@ import com.kiss.common.TxtRead;
 import com.kiss.common.config.SystemConfig;
 import com.kiss.common.supper.NioTxtRead;
 import com.kiss.dto.TxtChapterDto;
+import com.kiss.dto.TxtDto;
 import com.kiss.jpa.TxtModelJpa;
 import com.kiss.model.TxtChapterMsgModel;
 import com.kiss.model.TxtModel;
@@ -168,5 +169,13 @@ public class TxtServiceImpl extends BaseServiceImpl<TxtModel,String> implements 
         return jpaRepository.findOne(Example.of(model));
     }
 
-
+    @Override
+    public List findAll() {
+        List<TxtModel> models = super.findAll();
+        List<TxtDto> dtos = new ArrayList<>();
+        for (TxtModel model:models) {
+            dtos.add(model.toDto());
+        }
+        return dtos;
+    }
 }

@@ -11,7 +11,7 @@ public class CacheFactory {
     /**
      * 获得默认的缓存区
      * */
-    public final static Cache getDeafultCache() {
+    public final static Cache getDefualtCache() {
         Cache cache = new MemoryCache();
         cache.setSize(Cache.DEFAULT_CACHE_SIZE);
         return cache;

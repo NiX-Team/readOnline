@@ -40,7 +40,7 @@ public class NioTest {
         FileChannel fileChannel = null;
         try {
             fileChannel = new RandomAccessFile(new File("E:\\test\\txt\\诛仙.txt"),"r").getChannel();
-            Cache<ChannelCache> cache = CacheFactory.getDeafultCache();
+            Cache<ChannelCache> cache = CacheFactory.getDefualtCache();
             ChannelCache cache1 = new ChannelCache();
             cache1.setChannel("hello world");
             cache.put(cache1);
@@ -53,31 +53,21 @@ public class NioTest {
 
     }
 
-    public static final Monitor monitor = new Monitor();
-    public static final BeMonitor beMonitor = new BeMonitor();
 
     @Test
-    public void test() throws InterruptedException {
-        beMonitor.addObserver(monitor);
-        new Thread(() -> {
-            beMonitor.setName("ok1");
-        }).start();
-        beMonitor.setName("ok3");
-        beMonitor.setName("ok2");
+    public void test() throws Exception {
+
+        FileChannel channel = new RandomAccessFile(new File("test.log"),"rwd").getChannel();
+        byte[] bytes = "hello".getBytes();
+        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+        channel.position(channel.size() + bytes.length);
+        channel.write(byteBuffer);
+        ByteBuffer byteBuffer1 = ByteBuffer.allocate((int) channel.size());
+        channel.position(0);
+        channel.read(byteBuffer1);
+        System.out.println(new String(byteBuffer1.array()));
+        channel.close();
+
     }
 
-}
-class BeMonitor extends Observable{
-    public void setName(String name) {
-        setChanged();
-        notifyObservers(name);
-    }
-
-}
-class Monitor implements Observer{
-
-    @Override
-    public void update(Observable o, Object arg) {
-        System.out.println(arg);
-    }
 }

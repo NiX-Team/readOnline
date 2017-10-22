@@ -5,14 +5,16 @@ import org.hibernate.annotations.Type;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * txt图书的章节信息
- * */
+ *
+ * @author 11723*/
 @Entity
 @Table(indexes = @Index(name = "index_txtSn",columnList = "txtSn",unique = true))
-public class TxtChapterMsgModel {
+public class TxtChapterMsgModel implements Serializable{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid",strategy = "increment")

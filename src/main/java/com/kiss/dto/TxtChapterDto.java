@@ -1,5 +1,8 @@
 package com.kiss.dto;
 
+/**
+ * @author 11723
+ */
 public class TxtChapterDto {
     private Integer chapter;
     private Long offset;
