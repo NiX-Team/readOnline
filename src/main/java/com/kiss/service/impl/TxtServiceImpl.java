@@ -30,10 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -88,8 +85,13 @@ public class TxtServiceImpl extends BaseServiceImpl<TxtModel,String> implements 
         if (model.getChapters().getNioOffsets() != null) {
             //nio读取方式
             int startOffset = Math.toIntExact(txtChapterDto.getNioOffset());
-            int endOffset = Math.toIntExact(model.getChapters().getNioOffsets()[txtChapterDto.getChapter() + 1]);
             byte[] bytes = getCacheContent(txtModelCount);
+            int endOffset;
+            if (txtChapterDto.getChapter() + 1 >= model.getChapters().getNioOffsets().length) {
+                endOffset = bytes == null ? -1 : bytes.length;
+            }else {
+                endOffset = Math.toIntExact(model.getChapters().getNioOffsets()[txtChapterDto.getChapter() + 1]);
+            }
             if (bytes == null){
                 date = TxtUtil.readStartToEndByNio(txtFile,startOffset,endOffset,"GBK");
             }else {

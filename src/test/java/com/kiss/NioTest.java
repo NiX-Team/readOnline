@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -54,19 +55,12 @@ public class NioTest {
     }
 
 
+
+
     @Test
     public void test() throws Exception {
 
-        FileChannel channel = new RandomAccessFile(new File("test.log"),"rwd").getChannel();
-        byte[] bytes = "hello".getBytes();
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        channel.position(channel.size() + bytes.length);
-        channel.write(byteBuffer);
-        ByteBuffer byteBuffer1 = ByteBuffer.allocate((int) channel.size());
-        channel.position(0);
-        channel.read(byteBuffer1);
-        System.out.println(new String(byteBuffer1.array()));
-        channel.close();
+        
 
     }
 

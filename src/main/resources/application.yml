@@ -2,7 +2,7 @@ server:
   port: 8080
 system-config:
   txtPath: "E://test/txt/"
-  coverPath: "G://IDEA//readOnline//readOnline//image"
+  coverPath: "G://IDEA//readOnline//readOnline//image/"
   defaultCoverImg: "default.jpg"
   cacheBoundary: 2
 spring:
@@ -17,7 +17,8 @@ spring:
     show-sql: true
   http:
     multipart:
-      max-file-size: 20480000
+      max-file-size: 1024MB
+      max-request-size: 1024MB
 logging:
   file: ./log.log
   level:

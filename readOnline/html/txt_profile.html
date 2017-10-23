@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../app/jquery/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="../app/bootstrap/css/bootstrap.min.css">
+    <title>章节浏览</title>
+</head>
+<body>
+
+<div class="list-group" id="chapter_list">
+</div>
+
+<script>
+    var TXT_SN = getParams("txtSn");
+    document.title = getParams("txtName");
+    var page = 1;
+    var sort = true;
+    var chapterList = $("#chapter_list");
+
+    function getParams(key) {
+        var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return decodeURI(r[2]);
+        }
+        return null;
+    };
+
+
+    function addOneChapter(chapterMsg) {
+        $("<a  href='chapter_content.html?url=/kiss/read/" + TXT_SN + "/1?chapter=" + chapterMsg.chapter + "x86nioOffset="
+            + chapterMsg.nioOffset+ "&title=" + chapterMsg.title + "'" +
+            " class='list-group-item'>" + chapterMsg.title +"</a>").appendTo(chapterList);
+    }
+    function getPage() {
+        $.ajax({
+            type: 'get',
+            url: "/kiss/chapter/" + TXT_SN + "?page=" + page + "&sort=" + (sort ? "asc" : "desc"),
+            dataType:'json',
+            success: function (backData) {
+                if (backData.status == 1) {
+                    for (var i = 0;i < backData.data.length;i ++) {
+                        addOneChapter(backData.data[i]);
+                    }
+                }
+
+            } ,
+            error:function() {
+            }
+        });
+    }
+    getPage();
+
+    window.onscroll = function(){
+        var t = document.documentElement.scrollTop || document.body.scrollTop;  //离上方的距离
+        var h =window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; //可见宽度
+        if( t >= document.documentElement.scrollHeight -h ) {
+            page++;
+            getPage();
+        }
+    }
+</script>
+</body>
+</html>

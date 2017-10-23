@@ -39,9 +39,9 @@ public class NioTxtRead implements TxtRead{
                     i++;
                     //i - beforeOffset - 2 减2是为了去掉line末尾的\r\n 有\r\n时正则匹配错误
                     line = new String(buffer.array(),beforeOffset,i - beforeOffset - 2,encode);
-                    if (line.matches("第.*")) {
+                    if (line.matches("[\\s\\S]{0,15}第[\\S]{1,10}章[\\s\\S]{0,20}") || line.matches("全书完.*") || line.matches("剧终.*")) {
                         chapters.add(chapterCount++);
-                        titles.add(line);
+                        titles.add(line.replace(",","，"));
                         nioOffsets.add(beforeOffset);
                     }
                     beforeOffset = i;

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../app/jquery/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="../app/bootstrap/css/bootstrap.min.css">
+    <style>
+        #title{
+            text-align: center;
+            color: green;
+        }
+        #chapter_content{
+            font-size: 15px;
+        }
+        #msg{
+            position: fixed;
+            width: 100px;
+            height: 60%;
+            background-color: green;
+            right: 0;
+            top: 20%;
+        }
+    </style>
+</head>
+<body>
+<h3 id="title"></h3>
+<div id="msg">
+
+</div>
+<div id="chapter_content">
+</div>
+<script>
+    var url = getParams("url").replace("x86","&");
+    var page = 1;
+    var limit = 10240;
+    var content = $("#chapter_content");
+    document.title = getParams("title");
+    $("#title").text(getParams("title"));
+    function getParams(key) {
+        var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return decodeURI(r[2]);
+        }
+        return null;
+    };
+
+    function getContent() {
+        $.ajax({
+            type: 'get',
+            url: url + "&page=" + page + "&limit=" + limit,
+            dataType:'json',
+            success: function (backData) {
+                if (backData.status == 1) {
+                    content.html("<p>" + backData.data.txt.toString().replace(/(\r\n\r\n)|(\n)/g,
+                        "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + "</p>")
+                }
+                content.css("width",($(window).width()-100) + "px");
+            } ,
+            error:function() {
+            }
+        });
+    }
+    getContent();
+</script>
+</body>
+</html>

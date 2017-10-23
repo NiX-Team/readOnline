@@ -34,7 +34,7 @@ public class TxtChapterServiceImpl  extends BaseServiceImpl<TxtChapterMsgModel,I
         model = jpaRepository.findOne(Example.of(model,ExampleMatcher.matching().withMatcher("txtSn", ExampleMatcher.GenericPropertyMatchers.exact())));
         Assert.notNull(model,"不存在该图书");
         List list = new ArrayList<>();
-        for (int i = 0 ;i < limit;i ++ ) {
+        for (int i = 0 ;i < limit && ((page - 1) * limit + i) < model.getNioOffsets().length;i ++ ) {
             TxtChapterDto model1 = new TxtChapterDto();
             if ("asc".equals(sort.toLowerCase())) {
                 model1.setChapter(model.getChapters()[(page - 1) * limit + i]);

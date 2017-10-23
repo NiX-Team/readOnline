@@ -34,8 +34,8 @@ public final class TxtUtil {
      * */
     public static String readStartToEndByNio(File txtFile,int startOffset,int endOffset,String encode) {
         try {
-            int size = endOffset - startOffset;
             FileChannel fileChannel = new RandomAccessFile(txtFile,"r").getChannel();
+            int size = endOffset == -1 ? (int) (fileChannel.size() - startOffset) : (endOffset - startOffset);
             ByteBuffer buffer = ByteBuffer.allocate(size);
             fileChannel.read(buffer,startOffset);
             return new String(buffer.array(),encode);

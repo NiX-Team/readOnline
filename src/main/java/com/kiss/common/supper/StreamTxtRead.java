@@ -28,7 +28,7 @@ public class StreamTxtRead implements TxtRead{
             List titles = new ArrayList();
             TxtChapterMsgModel model = new TxtChapterMsgModel();
             while ((line = reader.readLine()) != null) {
-                if (line.matches("第.*")) {
+                if (line.matches("[\\s\\S]{0,15}第[\\S]{1,10}章[\\s\\S]{0,20}") || line.matches("全书完.*") || line.matches("剧终.*")) {
                     chapters.add(chapterCount++);
                     offsets.add(lineCount);
                     titles.add(line);

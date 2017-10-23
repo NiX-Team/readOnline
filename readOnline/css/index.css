@@ -24,7 +24,9 @@ a:hover{
     left: 20px;
     width: 320px;
 }
-
+.txt_msg{
+    background-color: rgba(255,255,255,0.3);
+}
 .txt_log{
     width: 90%;
     margin-top: 10px;
