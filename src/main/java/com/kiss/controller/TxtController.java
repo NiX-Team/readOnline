@@ -46,6 +46,7 @@ public class TxtController {
     public ReturnObject save(@Valid@ModelAttribute TxtModel model,
                              @RequestParam(value = "txtFile") MultipartFile txtFile,
                              @RequestParam(value = "coverImg",required = false) MultipartFile coverImg) throws Exception {
+        System.out.println(txtFile.getOriginalFilename() + "---" + coverImg.getOriginalFilename());
         txtService.save(model,txtFile,coverImg);
         return ReturnUtil.success(null);
     }
@@ -88,5 +89,13 @@ public class TxtController {
     @GetMapping("/delete/{txtSn}")
     public ReturnObject delete(@PathVariable("txtSn") String txtSn) throws WebException {
         return ReturnUtil.success(txtService.delete(txtSn));
+    }
+
+
+    @ResponseBody
+    @PostMapping("post_file")
+    public String postFile(MultipartFile file) {
+        System.out.println("file-legth=" + file.getSize());
+        return "SUCCESS";
     }
 }

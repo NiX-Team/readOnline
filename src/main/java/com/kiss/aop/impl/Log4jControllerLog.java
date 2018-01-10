@@ -27,7 +27,7 @@ public class Log4jControllerLog implements ControllerLog{
     @Override
     public void after(Object returnObject) {
         log.info("+++++++++++++++++method return+++++++++++++++++");
-        log.info("return:" + returnObject);
+        log.info("return:" + (returnObject.toString().length() > 1024 ? returnObject.hashCode() : returnObject));
         log.info("+++++++++++++++++++++++++++++++++++++++++++++++");
     }
 }

@@ -15,11 +15,7 @@ public final class ReturnUtil {
      * @param o 返回的内容
      * */
     public static ReturnObject success(Object o) {
-        ReturnObject object = new ReturnObject();
-        object.setStatus(SUCCESS_CODE);
-        object.setMsg(SUCCESS_MSG);
-        object.setData(o);
-        return object;
+        return success(null,o);
     }
     /**
      * 接口调用成功，有提示消息
@@ -29,7 +25,7 @@ public final class ReturnUtil {
     public static ReturnObject success(String msg,Object o) {
         ReturnObject object = new ReturnObject();
         object.setStatus(SUCCESS_CODE);
-        object.setMsg(msg);
+        object.setMsg(msg == null ? SUCCESS_MSG : msg);
         object.setData(o);
         return object;
     }
@@ -38,11 +34,7 @@ public final class ReturnUtil {
      * @param o 失败时返回的内容
      * */
     public static ReturnObject fail(Object o) {
-        ReturnObject object = new ReturnObject();
-        object.setStatus(FAIL_CODE);
-        object.setMsg(FAIL_MSG);
-        object.setData(o);
-        return object;
+        return fail(null,null,o);
     }
 
     /**
@@ -52,8 +44,8 @@ public final class ReturnUtil {
      * */
     public static ReturnObject fail(Integer code,String msg,Object o) {
         ReturnObject object = new ReturnObject();
-        object.setStatus(code);
-        object.setMsg(msg);
+        object.setStatus(code == null ? FAIL_CODE : code);
+        object.setMsg(msg == null ? FAIL_MSG : msg);
         object.setData(o);
         return object;
     }

@@ -1,16 +1,16 @@
 server:
   port: 8080
 system-config:
-  txtPath: "E://test/txt/"
-  coverPath: "G://IDEA//readOnline//readOnline//image/"
+  txtPath: "G:/IDEA/readOnline/readOnline/readOnline/txt/"
+  coverPath: "G:/IDEA/readOnline/readOnline/readOnline/image/"
   defaultCoverImg: "default.jpg"
   cacheBoundary: 2
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/txt?useUnicode=true&amp;characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/txt?useUnicode=true&amp;characterEncoding=UTF-8
     username: root
-    password:
+    password: 
   jpa:
     hibernate:
       ddl-auto: update
